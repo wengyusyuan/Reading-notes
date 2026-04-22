@@ -53,6 +53,7 @@ npm run check
 ## GitHub Actions 自動部署
 
 已新增 workflow：`.github/workflows/deploy.yml`
+安全檢查 workflow：`.github/workflows/security.yml`
 
 ### 觸發條件
 
@@ -70,14 +71,28 @@ npm run check
 
 ### 必要 Secret
 
-請到 `Settings` -> `Secrets and variables` -> `Actions` 新增：
-
-- `GEMINI_API_KEY`
-
-Workflow 在 build 階段會注入：
-
 - `VITE_BASE_PATH=/Reading-notes/`
-- `GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}`
+
+> GitHub Pages 為前端靜態託管，任何打包進前端的金鑰都會被公開。
+> 因此部署流程**不會**注入 `GEMINI_API_KEY`，避免洩漏你的私密金鑰。
+
+## 公開免費部署（安全模式）
+
+此專案目前採用以下安全策略：
+
+- 前端部署到 GitHub Pages（免費）
+- 不在 CI/CD 或前端 bundle 放置私密 API key
+- 使用者若要啟用 AI 自動補全，需自行在瀏覽器輸入自己的 Gemini Key（只存在該瀏覽器 localStorage）
+- Firestore 由 Firebase Auth + Firestore Rules 控制資料擁有者存取
+
+## 安全強化項目
+
+- 新增 Dependabot：`.github/dependabot.yml`
+- 新增安全掃描：`.github/workflows/security.yml`
+	- CodeQL (JavaScript/TypeScript)
+	- npm audit（高風險以上）
+- 新增安全政策文件：`SECURITY.md`
+- `index.html` 加入 CSP / referrer policy / nosniff
 
 ## 本次 package.json 調整紀錄
 

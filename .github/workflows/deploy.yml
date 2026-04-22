@@ -34,7 +34,6 @@ jobs:
       - name: Build
         env:
           VITE_BASE_PATH: /Reading-notes/
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run build
 
       - name: Upload Pages artifact

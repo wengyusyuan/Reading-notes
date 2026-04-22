@@ -8,7 +8,8 @@ let auth: any = null;
 
 const loadConfig = async () => {
     try {
-        const configText = await fetch('/firebase-applet-config.json').then(r => r.json());
+        const configUrl = `${import.meta.env.BASE_URL}firebase-applet-config.json`;
+        const configText = await fetch(configUrl).then(r => r.json());
         const app = initializeApp(configText);
         db = getFirestore(app, configText.firestoreDatabaseId);
         auth = getAuth(app);
