@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'PingFang TC', 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Georgia', serif;
+  --font-mono: 'Courier New', Courier, monospace;
+  
+  --color-theme-bg: #FDFCF9;
+  --color-theme-sidebar: #FAF8F5;
+  --color-theme-ink: #1A1A1A;
+  --color-theme-line: #E5E1D8;
+  --color-theme-meta: #8C857D;
+  --color-theme-muted: #5C554E;
+}
+
+@layer base {
+  body {
+    @apply bg-theme-bg text-theme-ink font-sans antialiased;
+  }
+}
+
+@layer components {
+  .geometric-card {
+    @apply bg-white border border-theme-line rounded-[4px] shadow-[4px_4px_0px_rgba(229,225,216,0.5)];
+  }
+  
+  .status-badge {
+    @apply text-[11px] px-2 py-0.5 rounded-[20px] font-semibold uppercase tracking-wider;
+  }
+}

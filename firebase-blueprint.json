@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "Book": {
+      "title": "Book",
+      "description": "Records details of a book, borrowing info, and user reflections.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "isbn": { "type": "string" },
+        "category": { "type": "string" },
+        "library": { "type": "string" },
+        "borrowDate": { "type": "string", "format": "date-time" },
+        "returnDate": { "type": "string", "format": "date-time" },
+        "thoughts": { "type": "string" },
+        "rating": { "type": "integer" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["title", "author", "userId", "createdAt", "category"]
+    }
+  },
+  "firestore": {
+    "/books/{bookId}": {
+      "schema": "Book",
+      "description": "User's book entries and reflections"
+    }
+  }
+}

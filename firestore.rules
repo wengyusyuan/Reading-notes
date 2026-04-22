@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Book entity validation
+    function isValidBook(data) {
+      return data.keys().hasAll(['title', 'author', 'userId', 'createdAt', 'category']) &&
+             data.keys().size() <= 12 && // Allow optional fields like isbn, library, etc.
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.author is string && data.author.size() > 0 && data.author.size() <= 200 &&
+             data.userId == request.auth.uid &&
+             data.category is string && data.category.size() <= 100 &&
+             (data.get('isbn', '') is string && data.get('isbn', '').size() <= 20) &&
+             (data.get('library', '') is string && data.get('library', '').size() <= 100) &&
+             (data.get('thoughts', '') is string && data.get('thoughts', '').size() <= 5000) &&
+             (data.get('rating', 0) is int && data.get('rating', 0) >= 0 && data.get('rating', 0) <= 5);
+    }
+
+    match /books/{bookId} {
+      allow create: if isSignedIn() && isValidBook(incoming()) && incoming().createdAt == request.time;
+      allow read, delete: if isOwner(existing().userId);
+      allow update: if isOwner(existing().userId) && isValidBook(incoming()) && 
+                    incoming().userId == existing().userId &&
+                    incoming().createdAt == existing().createdAt;
+    }
+  }
+}
