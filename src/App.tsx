@@ -186,11 +186,14 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {filteredBooks.map((book) => (
-                <BookCard 
-                  key={book.id} 
-                  book={book} 
-                  onDelete={(id) => deleteBookEntry(id)} 
-                />
+                <div key={book.id}>
+                  <BookCard 
+                    book={book} 
+                    onDelete={(id) => {
+                      void deleteBookEntry(id);
+                    }} 
+                  />
+                </div>
               ))}
             </AnimatePresence>
           </div>
